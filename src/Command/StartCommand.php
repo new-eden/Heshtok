@@ -56,38 +56,38 @@ class StartCommand extends Command{
         }
 
         // Start processing
-        //$blueprints = new blueprints($mongo);
-        //$blueprints->insertData($workDir);
+        $blueprints = new blueprints($mongo);
+        $blueprints->insertData($workDir);
         
-        //$categoryIDs = new categoryIDs($mongo);
-        //$categoryIDs->insertData($workDir);
+        $categoryIDs = new categoryIDs($mongo);
+        $categoryIDs->insertData($workDir);
 
-        //$certificates = new certificates($mongo);
-        //$certificates->insertData($workDir);
+        $certificates = new certificates($mongo);
+        $certificates->insertData($workDir);
 
-        //$graphicIDs = new graphicIDs($mongo);
-        //$graphicIDs->insertData($workDir);
+        $graphicIDs = new graphicIDs($mongo);
+        $graphicIDs->insertData($workDir);
 
-        //$groupIDs = new groupIDs($mongo);
-        //$groupIDs->insertData($workDir);
+        $groupIDs = new groupIDs($mongo);
+        $groupIDs->insertData($workDir);
 
-        //$iconIDs = new iconIDs($mongo);
-        //$iconIDs->insertData($workDir);
+        $iconIDs = new iconIDs($mongo);
+        $iconIDs->insertData($workDir);
 
-        //$landmarks = new landmarks($mongo);
-        //$landmarks->insertData($workDir);
+        $landmarks = new landmarks($mongo);
+        $landmarks->insertData($workDir);
 
-        //$skinLicenses = new skinLicenses($mongo);
-        //$skinLicenses->insertData($workDir);
+        $skinLicenses = new skinLicenses($mongo);
+        $skinLicenses->insertData($workDir);
 
-        //$skinMaterials = new skinMaterials($mongo);
-        //$skinMaterials->insertData($workDir);
+        $skinMaterials = new skinMaterials($mongo);
+        $skinMaterials->insertData($workDir);
 
-        //$skins = new skins($mongo);
-        //$skins->insertData($workDir);
+        $skins = new skins($mongo);
+        $skins->insertData($workDir);
 
-        //$tournamentRuleSets = new tournamentRuleSets($mongo);
-        //$tournamentRuleSets->insertData($workDir);
+        $tournamentRuleSets = new tournamentRuleSets($mongo);
+        $tournamentRuleSets->insertData($workDir);
 
         $typeIDs = new typeIDs($mongo);
         $typeIDs->insertData($workDir);

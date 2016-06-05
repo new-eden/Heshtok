@@ -30,8 +30,15 @@ class groupIDs {
         $filePath = $workDir . "sde/fsd/{$className}{$this->fileType}";
         $fileData = file_get_contents($filePath);
 
+        $fileData = str_replace("de: ", "de: > \n            ", $fileData);
+        $fileData = str_replace("en: ", "en: > \n            ", $fileData);
+        $fileData = str_replace("fr: ", "fr: > \n            ", $fileData);
+        $fileData = str_replace("ja: ", "ja: > \n            ", $fileData);
+        $fileData = str_replace("ru: ", "ru: > \n            ", $fileData);
+        $fileData = str_replace("zh: ", "zh: > \n            ", $fileData);
+
         echo "Processing Yaml\n";
-        $array = \Spyc::YAMLLoad($fileData);
+        $array = yaml_parse($fileData);
 
         echo "Inserting data\n";
         foreach ($array as $key => $item) {

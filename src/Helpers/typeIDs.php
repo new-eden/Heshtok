@@ -30,8 +30,13 @@ class typeIDs {
         $filePath = $workDir . "sde/fsd/{$className}{$this->fileType}";
         $fileData = file_get_contents($filePath);
 
+        // PLEASE FOR FUCKS SAKE FIX YOUR STUPID SHIT
+        $fileData = str_ireplace("\n\n\n'", "'", $fileData);
+        $fileData = str_ireplace("\n\n'", "'", $fileData);
+
+        file_put_contents("/tmp/wat.yaml", $fileData);
         echo "Processing Yaml\n";
-        $array = \Spyc::YAMLLoad($fileData);
+        $array = yaml_parse($fileData);
 
         echo "Inserting data\n";
         foreach ($array as $key => $item) {

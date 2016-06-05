@@ -31,7 +31,7 @@ class landmarks {
         $fileData = file_get_contents($filePath);
 
         echo "Processing Yaml\n";
-        $array = Yaml::parse($fileData);
+        $array = yaml_parse($fileData);
 
         echo "Inserting data\n";
         foreach ($array as $key => $item) {

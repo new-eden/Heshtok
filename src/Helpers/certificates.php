@@ -30,8 +30,10 @@ class certificates {
         $filePath = $workDir . "sde/fsd/{$className}{$this->fileType}";
         $fileData = file_get_contents($filePath);
 
+        $fileData = str_replace("description: ", "description: > \n        ", $fileData);
+
         echo "Processing Yaml\n";
-        $array = \Spyc::YAMLLoad($fileData);
+        $array = Yaml::parse($fileData, 4);
 
         echo "Inserting data\n";
         foreach ($array as $key => $item) {

@@ -3,13 +3,15 @@
 namespace Heshtok\Helpers;
 
 use MongoDB\Database;
-use Symfony\Component\Yaml\Yaml;
 
-class certificates {
+class certificates
+{
     private $collectionName = "certificates";
     private $fileType = ".yaml";
     private $collection;
-    public function __construct(Database $mongoDB) {
+
+    public function __construct(Database $mongoDB)
+    {
         // Try and make the collection first
         try {
             $mongoDB->createCollection($this->collectionName);
@@ -20,7 +22,8 @@ class certificates {
         $this->collection = $mongoDB->selectCollection($this->collectionName);
     }
 
-    public function insertData($workDir) {
+    public function insertData($workDir)
+    {
         $className = (new \ReflectionClass(get_class()))->getShortName();
         echo "Now processing {$className} \n";
 
@@ -33,7 +36,7 @@ class certificates {
         $fileData = str_replace("description: ", "description: > \n        ", $fileData);
 
         echo "Processing Yaml\n";
-        $array = Yaml::parse($fileData, 4);
+        $array = yaml_parse($fileData);
 
         echo "Inserting data\n";
         foreach ($array as $key => $item) {
@@ -46,7 +49,8 @@ class certificates {
         }
     }
 
-    private function addIndexes() {
+    private function addIndexes()
+    {
         try {
             $this->collection->createIndex(
                 array(

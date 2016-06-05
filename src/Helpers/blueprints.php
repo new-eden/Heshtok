@@ -3,24 +3,27 @@
 namespace Heshtok\Helpers;
 
 use MongoDB\Database;
-use Symfony\Component\Yaml\Yaml;
 
-class blueprints {
+class blueprints
+{
     private $collectionName = "blueprints";
     private $fileType = ".yaml";
     private $collection;
-    public function __construct(Database $mongoDB) {
+
+    public function __construct(Database $mongoDB)
+    {
         // Try and make the collection first
         try {
             $mongoDB->createCollection($this->collectionName);
         } catch (\Exception $e) {
             echo $e->getMessage() . "\n";
         }
-        
+
         $this->collection = $mongoDB->selectCollection($this->collectionName);
     }
-    
-    public function insertData($workDir) {
+
+    public function insertData($workDir)
+    {
         $className = (new \ReflectionClass(get_class()))->getShortName();
         echo "Now processing {$className} \n";
 
@@ -43,7 +46,8 @@ class blueprints {
         }
     }
 
-    private function addIndexes() {
+    private function addIndexes()
+    {
         try {
             $this->collection->createIndex(
                 array(

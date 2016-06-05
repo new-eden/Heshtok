@@ -3,13 +3,15 @@
 namespace Heshtok\Helpers;
 
 use MongoDB\Database;
-use Symfony\Component\Yaml\Yaml;
 
-class skinMaterials {
+class skinMaterials
+{
     private $collectionName = "skinMaterials";
     private $fileType = ".yaml";
     private $collection;
-    public function __construct(Database $mongoDB) {
+
+    public function __construct(Database $mongoDB)
+    {
         // Try and make the collection first
         try {
             $mongoDB->createCollection($this->collectionName);
@@ -20,7 +22,8 @@ class skinMaterials {
         $this->collection = $mongoDB->selectCollection($this->collectionName);
     }
 
-    public function insertData($workDir) {
+    public function insertData($workDir)
+    {
         $className = (new \ReflectionClass(get_class()))->getShortName();
         echo "Now processing {$className} \n";
 
@@ -44,7 +47,8 @@ class skinMaterials {
         }
     }
 
-    private function addIndexes() {
+    private function addIndexes()
+    {
         try {
             $this->collection->createIndex(
                 array(

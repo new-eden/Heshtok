@@ -4,10 +4,10 @@ namespace Heshtok\Helpers;
 
 use MongoDB\Database;
 
-class graphicIDs
+class universeRegions
 {
-    private $collectionName = "graphicIDs";
-    private $fileType = ".yaml";
+    private $collectionName = "regions";
+    private $fileType = ".staticdata";
     private $collection;
 
     public function __construct(Database $mongoDB)
@@ -30,22 +30,19 @@ class graphicIDs
         echo "Adding Indexes\n";
         $this->addIndexes();
 
-        $filePath = $workDir . "sde/fsd/{$className}{$this->fileType}";
-        $fileData = file_get_contents($filePath);
+        echo "Importing data\n";
+        // Find all the .staticdata files
+        $locations = $workDir . "sde/fsd/universe/*/*/*{$this->fileType}";
+        $files = glob($locations);
 
-        $fileData = str_replace("description: ", "description: |\n    ", $fileData);
+        foreach ($files as $file) {
+            $exp = explode("/", $file);
+            $region = $exp[6];
+            $data = yaml_parse(file_get_contents($file));
+            $data["regionName"] = $region;
 
-        echo "Processing Yaml\n";
-        $array = yaml_parse($fileData);
-
-        echo "Inserting data\n";
-        foreach ($array as $key => $item) {
-            try {
-                $item["graphicsID"] = $key;
-                $this->collection->insertOne($item);
-            } catch (\Exception $e) {
-                echo $e->getMessage() . "\n";
-            }
+            ksort($data);
+            $this->collection->insertOne($data);
         }
     }
 
@@ -54,11 +51,14 @@ class graphicIDs
         try {
             $this->collection->createIndex(
                 array(
-                    "graphicsID" => 1
+                    "regionID" => 1
                 ),
                 array(
                     "unique" => 1
                 )
+            );
+            $this->collection->createIndex(
+                array("regionName" => 1)
             );
         } catch (\Exception $e) {
             echo $e->getMessage() . "\n";

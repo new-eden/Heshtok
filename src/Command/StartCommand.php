@@ -14,6 +14,9 @@ use Heshtok\Helpers\skinMaterials;
 use Heshtok\Helpers\skins;
 use Heshtok\Helpers\tournamentRuleSets;
 use Heshtok\Helpers\typeIDs;
+use Heshtok\Helpers\universeConstellations;
+use Heshtok\Helpers\universeRegions;
+use Heshtok\Helpers\universeSystems;
 use MongoDB\Client;
 use MongoDB\Database;
 use Symfony\Component\Console\Command\Command;
@@ -92,7 +95,17 @@ class StartCommand extends Command{
         $typeIDs = new typeIDs($mongo);
         $typeIDs->insertData($workDir);
 
-        $universeEve;
-        $universeWormhole;
+        $eveSystems = new universeSystems($mongo);
+        $eveSystems->insertData($workDir);
+
+        $eveConstellations = new universeConstellations($mongo);
+        $eveConstellations->insertData($workDir);
+
+        $eveRegions = new universeRegions($mongo);
+        $eveRegions->insertData($workDir);
+
+        // Clean up delete downloaded file, and remove sde library
+        exec("rm {$workDir}{$fileName}");
+        exec("rm -R {$workDir}/sde");
     }
 }

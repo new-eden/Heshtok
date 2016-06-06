@@ -37,7 +37,6 @@ class typeIDs
         $fileData = str_ireplace("\n\n\n'", "'", $fileData);
         $fileData = str_ireplace("\n\n'", "'", $fileData);
 
-        file_put_contents("/tmp/wat.yaml", $fileData);
         echo "Processing Yaml\n";
         $array = yaml_parse($fileData);
 

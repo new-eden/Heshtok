@@ -68,7 +68,6 @@ class StartCommand extends Command
         $sqliteFile = $workDir . str_replace(".bz2", "", $sqliteBaseName);
 
         // Start processing
-        /*
         $blueprints = new blueprints($mongo);
         $blueprints->insertData($workDir);
 
@@ -113,7 +112,7 @@ class StartCommand extends Command
 
         $eveRegions = new universeRegions($mongo);
         $eveRegions->insertData($workDir);
-*/
+
         $eveCelestials = new universeCelestials($mongo);
         $eveCelestials->insertData($sqliteFile);
 

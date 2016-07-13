@@ -57,10 +57,8 @@ class StartCommand extends Command
 
         echo "Downloading and unpacking the CCP SDE\n";
         $fileName = basename($url);
-        if (!file_exists($workDir . $fileName)) {
-            exec("curl --progress-bar -o {$workDir}{$fileName} {$url}");
-            exec("unzip {$workDir}{$fileName}");
-        }
+        exec("curl --progress-bar -o {$workDir}{$fileName} {$url}");
+        exec("unzip {$workDir}{$fileName}");
 
         echo "Downloading and unpacking the SQLite Dump from Fuzzysteve\n";
         $sqliteBaseName = basename($sqlite);
@@ -70,6 +68,7 @@ class StartCommand extends Command
         $sqliteFile = $workDir . str_replace(".bz2", "", $sqliteBaseName);
 
         // Start processing
+        /*
         $blueprints = new blueprints($mongo);
         $blueprints->insertData($workDir);
 
@@ -114,7 +113,7 @@ class StartCommand extends Command
 
         $eveRegions = new universeRegions($mongo);
         $eveRegions->insertData($workDir);
-
+*/
         $eveCelestials = new universeCelestials($mongo);
         $eveCelestials->insertData($sqliteFile);
 

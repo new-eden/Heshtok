@@ -50,7 +50,22 @@ class universeCelestials
         echo "Inserting data\n";
         foreach($result as $cel) {
             try {
-                $this->collection->insertOne($cel, array("upsert" => true));
+                $d = array(
+                    "itemID" => (int) $cel["itemID"],
+                    "itemName" => $cel["itemName"],
+                    "typeName" => $cel["typeName"],
+                    "typeID" => (int) $cel["typeID"],
+                    "solarSystemName" => $cel["solarSystemName"],
+                    "solarSystemID" => (int) $cel["solarSystemID"],
+                    "constellationID" => (int) $cel["constellationID"],
+                    "regionID" => (int) $cel["regionID"],
+                    "regionName" => $cel["regionName"],
+                    "orbitID" => (int) $cel["orbitID"],
+                    "x" => (float) $cel["x"],
+                    "y" => (float) $cel["y"],
+                    "z" => (float) $cel["z"]
+                );
+                $this->collection->insertOne($d, array("upsert" => true));
             } catch (\Exception $e) {
                 echo $e->getMessage() . "\n";
             }

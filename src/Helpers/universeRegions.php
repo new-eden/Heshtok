@@ -20,6 +20,8 @@ class universeRegions
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -42,7 +44,7 @@ class universeRegions
             $data["regionName"] = $region;
 
             ksort($data);
-            $this->collection->insertOne($data);
+            $this->collection->insertOne($data, array("upsert" => true));
         }
     }
 
@@ -51,7 +53,7 @@ class universeRegions
         try {
             $this->collection->createIndex(
                 array(
-                    "regionID" => 1
+                    "regionID" => -1
                 ),
                 array(
                     "unique" => 1
@@ -59,6 +61,9 @@ class universeRegions
             );
             $this->collection->createIndex(
                 array("regionName" => 1)
+            );
+            $this->collection->createIndex(
+                array("regionName" => "text")
             );
         } catch (\Exception $e) {
             echo $e->getMessage() . "\n";

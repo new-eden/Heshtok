@@ -20,6 +20,8 @@ class blueprints
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -39,7 +41,7 @@ class blueprints
         echo "Inserting data\n";
         foreach ($array as $item) {
             try {
-                $this->collection->insertOne($item);
+                $this->collection->insertOne($item, array("upsert" => true));
             } catch (\Exception $e) {
                 echo $e->getMessage() . "\n";
             }
@@ -51,7 +53,7 @@ class blueprints
         try {
             $this->collection->createIndex(
                 array(
-                    "blueprintTypeID" => 1
+                    "blueprintTypeID" => -1
                 ),
                 array(
                     "unique" => 1

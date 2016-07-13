@@ -20,6 +20,8 @@ class landmarks
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -40,7 +42,7 @@ class landmarks
         foreach ($array as $key => $item) {
             try {
                 $item["landmarkID"] = $key;
-                $this->collection->insertOne($item);
+                $this->collection->insertOne($item, array("upsert" => true));
             } catch (\Exception $e) {
                 echo $e->getMessage() . "\n";
             }
@@ -52,7 +54,7 @@ class landmarks
         try {
             $this->collection->createIndex(
                 array(
-                    "landmarkID" => 1
+                    "landmarkID" => -1
                 ),
                 array(
                     "unique" => 1

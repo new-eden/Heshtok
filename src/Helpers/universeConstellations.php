@@ -20,6 +20,8 @@ class universeConstellations
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -46,7 +48,7 @@ class universeConstellations
             $data["constellationName"] = $constellation;
 
             ksort($data);
-            $this->collection->insertOne($data);
+            $this->collection->insertOne($data, array("upsert" => true));
         }
     }
 
@@ -55,20 +57,23 @@ class universeConstellations
         try {
             $this->collection->createIndex(
                 array(
-                    "constellationID" => 1
+                    "constellationID" => -1
                 ),
                 array(
                     "unique" => 1
                 )
             );
             $this->collection->createIndex(
-                array("regionName" => 1)
+                array("regionName" => -1)
             );
             $this->collection->createIndex(
-                array("regionID" => 1)
+                array("regionID" => -1)
             );
             $this->collection->createIndex(
-                array("constellationName" => 1)
+                array("constellationName" => -1)
+            );
+            $this->collection->createIndex(
+                array("constellationName" => "text")
             );
         } catch (\Exception $e) {
             echo $e->getMessage() . "\n";

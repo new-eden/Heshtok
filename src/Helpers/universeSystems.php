@@ -20,6 +20,8 @@ class universeSystems
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -50,7 +52,8 @@ class universeSystems
             $data["solarSystemName"] = $systemName;
 
             ksort($data);
-            $this->collection->insertOne($data);
+            
+            $this->collection->insertOne($data, array("upsert" => true));
         }
     }
 
@@ -59,27 +62,31 @@ class universeSystems
         try {
             $this->collection->createIndex(
                 array(
-                    "solarSystemID" => 1
+                    "solarSystemID" => -1
                 ),
                 array(
                     "unique" => 1
                 )
             );
             $this->collection->createIndex(
-                array("regionName" => 1)
+                array("regionName" => -1)
             );
             $this->collection->createIndex(
-                array("regionID" => 1)
+                array("regionID" => -1)
             );
             $this->collection->createIndex(
-                array("constellationName" => 1)
+                array("constellationName" => -1)
             );
             $this->collection->createIndex(
-                array("constellationID" => 1)
+                array("constellationID" => -1)
             );
             $this->collection->createIndex(
-                array("solarSystemName" => 1)
+                array("solarSystemName" => -1)
             );
+            $this->collection->createIndex(
+                array("solarSystemName" => "text")
+            );
+
         } catch (\Exception $e) {
             echo $e->getMessage() . "\n";
         }

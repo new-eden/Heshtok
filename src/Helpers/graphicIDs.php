@@ -20,6 +20,8 @@ class graphicIDs
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -42,7 +44,7 @@ class graphicIDs
         foreach ($array as $key => $item) {
             try {
                 $item["graphicsID"] = $key;
-                $this->collection->insertOne($item);
+                $this->collection->insertOne($item, array("upsert" => true));
             } catch (\Exception $e) {
                 echo $e->getMessage() . "\n";
             }
@@ -54,7 +56,7 @@ class graphicIDs
         try {
             $this->collection->createIndex(
                 array(
-                    "graphicsID" => 1
+                    "graphicsID" => -1
                 ),
                 array(
                     "unique" => 1

@@ -14,6 +14,7 @@ use Heshtok\Helpers\skinMaterials;
 use Heshtok\Helpers\skins;
 use Heshtok\Helpers\tournamentRuleSets;
 use Heshtok\Helpers\typeIDs;
+use Heshtok\Helpers\universeCelestials;
 use Heshtok\Helpers\universeConstellations;
 use Heshtok\Helpers\universeRegions;
 use Heshtok\Helpers\universeSystems;
@@ -23,17 +24,19 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
-class StartCommand extends Command{
-    protected function configure() {
+class StartCommand extends Command
+{
+    protected function configure()
+    {
         $this->setName("start")
             ->setDescription("Start the conversion of the latest YAML Database Dump from CCP, to MongoDB")
             ->addOption("databaseName", null, InputOption::VALUE_OPTIONAL, "The name of the database to store the tables in", "ccp")
             ->addOption("workdir", null, InputOption::VALUE_OPTIONAL, "The directory where we will store temporary files", "/tmp/");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         ini_set("memory_limit", "-1");
         error_reporting(1);
         error_reporting(E_ALL);
@@ -49,14 +52,22 @@ class StartCommand extends Command{
 
         // @todo once CCP moves to latest.zip / latest.md5 switch to that, and use the md5 to check if the currently installed version is the latest
         // Download the Latest zip file (Currently hardcoded, because CCP havn't added a latest/md5 yet.. *sigh*)
-        $url = "https://cdn1.eveonline.com/data/sde/tranquility/sde-20160531-TRANQUILITY.zip";
-        $fileName = basename($url);
+        $url = "https://cdn1.eveonline.com/data/sde/tranquility/sde-20160704-TRANQUILITY.zip";
+        $sqlite = "https://www.fuzzwork.co.uk/dump/sqlite-latest.sqlite.bz2";
 
-        // @todo use a proper package/function/whatever for this part
-        if(!file_exists($workDir . $fileName)) {
+        echo "Downloading and unpacking the CCP SDE\n";
+        $fileName = basename($url);
+        if (!file_exists($workDir . $fileName)) {
             exec("curl --progress-bar -o {$workDir}{$fileName} {$url}");
             exec("unzip {$workDir}{$fileName}");
         }
+
+        echo "Downloading and unpacking the SQLite Dump from Fuzzysteve\n";
+        $sqliteBaseName = basename($sqlite);
+        exec("curl --progress-bar -o {$workDir}{$sqliteBaseName} {$sqlite}");
+        exec("bzip2 -d {$workDir}{$sqliteBaseName}");
+
+        $sqliteFile = $workDir . str_replace(".bz2", "", $sqliteBaseName);
 
         // Start processing
         $blueprints = new blueprints($mongo);
@@ -104,8 +115,12 @@ class StartCommand extends Command{
         $eveRegions = new universeRegions($mongo);
         $eveRegions->insertData($workDir);
 
+        $eveCelestials = new universeCelestials($mongo);
+        $eveCelestials->insertData($sqliteFile);
+
         // Clean up delete downloaded file, and remove sde library
         exec("rm {$workDir}{$fileName}");
         exec("rm -R {$workDir}/sde");
+        exec("rm -R {$sqliteFile}");
     }
 }

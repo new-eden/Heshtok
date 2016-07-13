@@ -20,6 +20,8 @@ class typeIDs
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -37,7 +39,6 @@ class typeIDs
         $fileData = str_ireplace("\n\n\n'", "'", $fileData);
         $fileData = str_ireplace("\n\n'", "'", $fileData);
 
-        file_put_contents("/tmp/wat.yaml", $fileData);
         echo "Processing Yaml\n";
         $array = yaml_parse($fileData);
 
@@ -45,7 +46,7 @@ class typeIDs
         foreach ($array as $key => $item) {
             try {
                 $item["typeID"] = $key;
-                $this->collection->insertOne($item);
+                $this->collection->insertOne($item, array("upsert" => true));
             } catch (\Exception $e) {
                 echo $e->getMessage() . "\n";
             }
@@ -57,10 +58,15 @@ class typeIDs
         try {
             $this->collection->createIndex(
                 array(
-                    "typeID" => 1
+                    "typeID" => -1
                 ),
                 array(
                     "unique" => 1
+                )
+            );
+            $this->collection->createIndex(
+                array(
+                    "\$**" => "text"
                 )
             );
         } catch (\Exception $e) {

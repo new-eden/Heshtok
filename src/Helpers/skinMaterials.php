@@ -20,6 +20,8 @@ class skinMaterials
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -40,7 +42,7 @@ class skinMaterials
         foreach ($array as $key => $item) {
             try {
                 $item["skinMaterialID"] = $key;
-                $this->collection->insertOne($item);
+                $this->collection->insertOne($item, array("upsert" => true));
             } catch (\Exception $e) {
                 echo $e->getMessage() . "\n";
             }
@@ -52,7 +54,7 @@ class skinMaterials
         try {
             $this->collection->createIndex(
                 array(
-                    "skinMaterialID" => 1
+                    "skinMaterialID" => -1
                 ),
                 array(
                     "unique" => 1

@@ -20,6 +20,8 @@ class groupIDs
         }
 
         $this->collection = $mongoDB->selectCollection($this->collectionName);
+        $this->collection->deleteMany(array());
+        $this->collection->dropIndexes();
     }
 
     public function insertData($workDir)
@@ -47,7 +49,7 @@ class groupIDs
         foreach ($array as $key => $item) {
             try {
                 $item["groupID"] = $key;
-                $this->collection->insertOne($item);
+                $this->collection->insertOne($item, array("upsert" => true));
             } catch (\Exception $e) {
                 echo $e->getMessage() . "\n";
             }
@@ -59,7 +61,7 @@ class groupIDs
         try {
             $this->collection->createIndex(
                 array(
-                    "groupID" => 1
+                    "groupID" => -1
                 ),
                 array(
                     "unique" => 1

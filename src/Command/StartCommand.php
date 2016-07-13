@@ -8,6 +8,7 @@ use Heshtok\Helpers\certificates;
 use Heshtok\Helpers\graphicIDs;
 use Heshtok\Helpers\groupIDs;
 use Heshtok\Helpers\iconIDs;
+use Heshtok\Helpers\invFlags;
 use Heshtok\Helpers\landmarks;
 use Heshtok\Helpers\skinLicenses;
 use Heshtok\Helpers\skinMaterials;
@@ -115,6 +116,10 @@ class StartCommand extends Command
 
         $eveCelestials = new universeCelestials($mongo);
         $eveCelestials->insertData($sqliteFile);
+        
+        $invFlags = new invFlags($mongo);
+        $invFlags->insertData($sqliteFile);
+        
 
         // Clean up delete downloaded file, and remove sde library
         exec("rm {$workDir}{$fileName}");

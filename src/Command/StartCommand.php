@@ -74,7 +74,6 @@ class StartCommand extends Command
         $sqliteFile = $workDir . str_replace(".bz2", "", $sqliteBaseName);
 
         // Start processing
-        
         $blueprints = new blueprints($mongo);
         $blueprints->insertData($workDir);
 

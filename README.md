@@ -11,6 +11,10 @@ Patience, lots of patience.. CCP doesn't do things right.. Not the first time, n
 
 PHP YAML package https://pecl.php.net/package/yaml
 
+# Installation / Usage
+1. Get composer from `https://getcomposer.org/`
+2. Install packages with composer: `php7.0 composer.phar install -o`
+3. Run: ./bin/heshtok start --help to see what you can set. (Default is the db called ccp, and use of your machines /tmp/ directory)
 
 # License
 

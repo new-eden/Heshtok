@@ -1,7 +1,7 @@
 {
   "name": "karbowiak/Heshtok",
   "description": "CCP Yaml -> MongoDB Converter..",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "MIT",
   "authors": [
     {
@@ -19,6 +19,7 @@
     "ext-yaml": "^2.0.0",
     "mongodb/mongodb": "1.0.*",
     "monolog/monolog": "1.19.*",
-    "symfony/console": "3.1.*"
+    "symfony/console": "3.1.*",
+    "symfony/yaml": "3.1.*"
   }
 }

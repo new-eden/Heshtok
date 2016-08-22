@@ -3,6 +3,7 @@
 namespace Heshtok\Helpers;
 
 use MongoDB\Database;
+use Symfony\Component\Yaml\Yaml;
 
 class universeConstellations
 {
@@ -36,13 +37,13 @@ class universeConstellations
         // Find all the .staticdata files
         $locations = $workDir . "sde/fsd/universe/*/*/*/*{$this->fileType}";
         $files = glob($locations);
-
+        $yaml = new Yaml();
         foreach ($files as $file) {
             $exp = explode("/", $file);
             $region = $exp[6];
             $constellation = $exp[7];
-            $data = yaml_parse(file_get_contents($file));
-            $regionData = yaml_parse(file_get_contents($workDir . "sde/fsd/universe/{$exp[5]}/{$region}/region.staticdata"));
+            $data = $yaml::parse(file_get_contents($file));
+            $regionData = $yaml::parse(file_get_contents($workDir . "sde/fsd/universe/{$exp[5]}/{$region}/region.staticdata"));
             $data["regionID"] = $regionData["regionID"];
             $data["regionName"] = $region;
             $data["constellationName"] = $constellation;

@@ -3,6 +3,7 @@
 namespace Heshtok\Helpers;
 
 use MongoDB\Database;
+use Symfony\Component\Yaml\Yaml;
 
 class universeRegions
 {
@@ -36,11 +37,11 @@ class universeRegions
         // Find all the .staticdata files
         $locations = $workDir . "sde/fsd/universe/*/*/*{$this->fileType}";
         $files = glob($locations);
-
+        $yaml = new Yaml();
         foreach ($files as $file) {
             $exp = explode("/", $file);
             $region = $exp[6];
-            $data = yaml_parse(file_get_contents($file));
+            $data = $yaml::parse(file_get_contents($file));
             $data["regionName"] = $region;
 
             ksort($data);

@@ -3,6 +3,7 @@
 namespace Heshtok\Helpers;
 
 use MongoDB\Database;
+use Symfony\Component\Yaml\Yaml;
 
 class typeIDs
 {
@@ -33,14 +34,44 @@ class typeIDs
         $this->addIndexes();
 
         $filePath = $workDir . "sde/fsd/{$className}{$this->fileType}";
-        $fileData = file_get_contents($filePath);
 
-        // PLEASE FOR FUCKS SAKE FIX YOUR STUPID SHIT
-        $fileData = str_ireplace("\n\n\n'", "'", $fileData);
-        $fileData = str_ireplace("\n\n'", "'", $fileData);
+        // This is just ridiculous...
+        $d = file_get_contents($filePath);
+        $d = str_ireplace("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'", "'", $d);
+        $d = str_ireplace("\n\n\n\n\n'", "'", $d);
+        $d = str_ireplace("\n\n\n\n'", "'", $d);
+        $d = str_ireplace("\n\n\n'", "'", $d);
+        $d = str_ireplace("\n\n'", "'", $d);
+        file_put_contents("{$workDir}tmpfile.yaml", $d);
+
+        $fileData = file($workDir . "tmpfile.yaml");
+
+        // Move all the languages down a line with an > \n tacked behind it - to denote multi-line strings..
+        $fix = array("  de:", "  en:", "  fr:", "  ja:", "  ru:", "  zh:", "  es:", "  it:");
+        $line = 0;
+        $yamlData = "";
+        foreach($fileData as $string) {
+            $lang = false;
+
+            foreach($fix as $l) {
+                if (stristr($string, $l)) {
+                    $explode = explode($l, $string);
+                    $space = $explode[0] . "    ";
+                    $lang = true;
+                    $yamlData .= str_replace($l, "{$l} > \n{$space}", $string);
+                }
+            }
+
+            if($lang == false)
+                $yamlData .= $string;
+
+            $line++;
+        }
+
 
         echo "Processing Yaml\n";
-        $array = yaml_parse($fileData);
+        $yaml = new Yaml();
+        $array = $yaml::parse($yamlData);
 
         echo "Inserting data\n";
         foreach ($array as $key => $item) {

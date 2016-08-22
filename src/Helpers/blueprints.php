@@ -3,6 +3,7 @@
 namespace Heshtok\Helpers;
 
 use MongoDB\Database;
+use Symfony\Component\Yaml\Yaml;
 
 class blueprints
 {
@@ -36,7 +37,8 @@ class blueprints
         $fileData = file_get_contents($filePath);
 
         echo "Processing Yaml\n";
-        $array = yaml_parse($fileData);
+        $yaml = new Yaml();
+        $array = $yaml::parse($fileData);
 
         echo "Inserting data\n";
         foreach ($array as $item) {

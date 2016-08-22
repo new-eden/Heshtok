@@ -54,8 +54,6 @@ class universeSystems
             $data["solarSystemName"] = $systemName;
 
             ksort($data);
-
-            echo "inserting: {$data["solarSystemName"]}\n";
             $this->collection->insertOne($data, array("upsert" => true));
         }
     }

@@ -73,6 +73,9 @@ class typeIDs
         $yaml = new Yaml();
         $array = $yaml::parse($yamlData);
 
+        // Lets remove the tmp yaml file since we're done using it
+        unlink($workDir . "tmpfile.yaml");
+
         echo "Inserting data\n";
         foreach ($array as $key => $item) {
             try {

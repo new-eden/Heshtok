@@ -33,7 +33,7 @@ class StartCommand extends Command
         $this->setName("start")
             ->setDescription("Start the conversion of the latest YAML Database Dump from CCP, to MongoDB")
             ->addOption("databaseName", null, InputOption::VALUE_OPTIONAL, "The name of the database to store the tables in", "ccp")
-            ->addOption("workdir", null, InputOption::VALUE_OPTIONAL, "The directory where we will store temporary files", "/tmp/");
+            ->addOption("workDir", null, InputOption::VALUE_OPTIONAL, "The directory where we will store temporary files", "/tmp/");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -44,11 +44,12 @@ class StartCommand extends Command
 
         // Initialize MongoDB
         $mongoInit = new Client();
+
         /** @var Database $mongo */
         $mongo = $mongoInit->selectDatabase($input->getOption("databaseName"));
 
-        // Workdirs
-        $workDir = $input->getOption("workdir");
+        // Work dirs
+        $workDir = $input->getOption("workDir");
         chdir($workDir);
 
         // @todo once CCP moves to latest.zip / latest.md5 switch to that, and use the md5 to check if the currently installed version is the latest
@@ -58,17 +59,22 @@ class StartCommand extends Command
 
         echo "Downloading and unpacking the CCP SDE\n";
         $fileName = basename($url);
-        exec("curl --progress-bar -o {$workDir}{$fileName} {$url}");
-        exec("unzip {$workDir}{$fileName}");
+        if(!file_exists($workDir . $fileName)) {
+            exec("curl --progress-bar -o {$workDir}{$fileName} {$url}");
+            exec("unzip {$workDir}{$fileName}");
+        }
 
         echo "Downloading and unpacking the SQLite Dump from Fuzzysteve\n";
         $sqliteBaseName = basename($sqlite);
-        exec("curl --progress-bar -o {$workDir}{$sqliteBaseName} {$sqlite}");
-        exec("bzip2 -d {$workDir}{$sqliteBaseName}");
+        if(!file_exists($workDir . str_replace(".bz2", "", $sqliteBaseName))) {
+            exec("curl --progress-bar -o {$workDir}{$sqliteBaseName} {$sqlite}");
+            exec("bzip2 -d {$workDir}{$sqliteBaseName}");
+        }
 
         $sqliteFile = $workDir . str_replace(".bz2", "", $sqliteBaseName);
 
         // Start processing
+        
         $blueprints = new blueprints($mongo);
         $blueprints->insertData($workDir);
 
@@ -119,7 +125,6 @@ class StartCommand extends Command
         
         $invFlags = new invFlags($mongo);
         $invFlags->insertData($sqliteFile);
-        
 
         // Clean up delete downloaded file, and remove sde library
         exec("rm {$workDir}{$fileName}");

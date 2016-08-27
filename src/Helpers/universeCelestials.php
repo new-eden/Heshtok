@@ -91,6 +91,31 @@ class universeCelestials
             );
             $this->collection->createIndex(
                 array(
+                    "solarSystemID" => -1
+                )
+            );
+            $this->collection->createIndex(
+                array(
+                    "solarSystemName" => "text"
+                )
+            );
+            $this->collection->createIndex(
+                array(
+                    "regionName" => "text"
+                )
+            );
+            $this->collection->createIndex(
+                array(
+                    "itemName" => "text"
+                )
+            );
+            $this->collection->createIndex(
+                array(
+                    "typeName" => "text"
+                )
+            );
+            $this->collection->createIndex(
+                array(
                     "x" => -1
                 )
             );

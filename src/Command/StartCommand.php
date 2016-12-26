@@ -1,4 +1,4 @@
-<?php
+7<?php
 
 namespace Heshtok\Command;
 
@@ -54,7 +54,7 @@ class StartCommand extends Command
 
         // @todo once CCP moves to latest.zip / latest.md5 switch to that, and use the md5 to check if the currently installed version is the latest
         // Download the Latest zip file (Currently hardcoded, because CCP havn't added a latest/md5 yet.. *sigh*)
-        $url = "https://cdn1.eveonline.com/data/sde/tranquility/sde-20161019-TRANQUILITY.zip";
+        $url = "https://cdn1.eveonline.com/data/sde/tranquility/sde-20161213-TRANQUILITY.zip";
         $sqlite = "https://www.fuzzwork.co.uk/dump/sqlite-latest.sqlite.bz2";
 
         echo "Downloading and unpacking the CCP SDE\n";
